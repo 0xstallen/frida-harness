@@ -66,13 +66,17 @@ function pad(v, w) {
 }
 
 function install() {
+    if (CONFIG.offset === 0) {
+        throw new Error("CONFIG.offset is 0 -- that is the ELF header, not a function");
+    }
     Interceptor.attach(base.add(CONFIG.offset), {
         onEnter: function (args) {
             this.site = this.returnAddress.sub(base).toInt32();
-            this.arg0 = args[0];
+            this.arg0 = args[0].toString();
         },
         onLeave: function (retval) {
-            var ret = retval.toInt32();
+            // toInt32() truncates a 64-bit return; toString() keeps it whole
+            var ret = retval.toString();
             total++;
 
             var key = hex(this.site);

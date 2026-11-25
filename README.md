@@ -65,10 +65,10 @@ total   = 414979
 uptime  = 240s
 
 sites   n        arg0         ret
-0x293f1c 202118  0x7c2670abcc 30355
-0x293f28 198441  0x7c2670abcc 30355
-0x293e98 10421   0x7c2670abe4 101
-0x2fd748 3918    0x7c2670abe4 101
+0x293f1c 202118  0x7c2670abcc 0x7693
+0x293f28 198441  0x7c2670abcc 0x7693
+0x293e98 10421   0x7c2670abe4 0x65
+0x2fd748 3918    0x7c2670abe4 0x65
 ```
 
 Read it as: two sites read the same pointer and get the same value —
@@ -79,8 +79,8 @@ those are the two halves of one accessor. The next pair reads a pointer
 
 - The address of a heap object changes every launch. The **call-site
   offset** does not. Always key on `returnAddress - moduleBase`.
-- `toInt32()` on a 64-bit return truncates. For 64-bit values use
-  `retval.toUInt64()` and log with `.toString()`.
+- `toInt32()` on a 64-bit return truncates. The harness logs `arg0` and
+  `ret` through `.toString()`, so 64-bit values stay whole.
 - Writes are best-effort. On Android 11+ the app's external storage may
   reject the write before `onCreate` returns; the harness retries on the
   flush timer for this reason.
